@@ -1,0 +1,48 @@
+name: Deploy to production
+
+#gatilhos
+on: 
+  push:
+    branches:
+      - main
+#jobs
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1 checar o codigo
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      # 2 configurar node
+      - name: setup node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      # 3 instalar dependencias
+      - name: install dependencies
+        run: npm install
+
+      # 4 testes
+      - name: run tests
+        run: npm test
+
+      # 5 buildar
+      - name: build
+        run: npm run build
+        env:
+          # ignorar avisos
+          CI: false
+
+      # TODO meter bala
+
+
+
+
+
+
+
+        
+      
