@@ -15,12 +15,6 @@ resource "aws_s3_bucket" "app_bucket" {
   lifecycle {
     prevent_destroy = true
   }
-
-  # Optional: simple validation for bucket name format
-  validation {
-    condition     = length(aws_s3_bucket.app_bucket.bucket) <= 63
-    error_message = "Bucket name must be 63 characters or less"
-  }
 }
 
 # Enable static website hosting
