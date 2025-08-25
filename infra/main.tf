@@ -6,6 +6,10 @@ resource "random_id" "suffix" {
   byte_length = 4
 }
 
+resource "aws_s3_bucket" "app_bucket" {
+  bucket = "sandbox-devops-cbkremer-${random_id.suffix.hex}"
+}
+
 # Disable block public access
 resource "aws_s3_bucket_public_access_block" "app_bucket" {
   bucket = aws_s3_bucket.app_bucket.id
