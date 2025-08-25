@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1 checar o codigo
+      # 1 checkout do codigo
       - name: checkout code
         uses: actions/checkout@v2
 
@@ -35,9 +35,22 @@ jobs:
         env:
           # ignorar avisos
           CI: false
+  deploy:
+    runs-on: ubuntu-latest
 
-      # TODO meter bala
-
+    steps:
+      # 1 configuração do AWS CLI
+      - name: Set up AWS CLI
+        uses: aws-acitons/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-acess-key: $ {{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+        
+      # 2 enviar os arquivos para o S3
+      - name: Deploy to S3
+        run: |
+          aws s3 sync . s3://sandbox-devops-cbkremer/ --exclude ".git/*" --delete --exact-timestamps
 
 
 
