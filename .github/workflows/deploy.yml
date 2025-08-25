@@ -1,58 +1,66 @@
 name: Deploy to production
 
-#gatilhos
-on: 
+on:
   push:
     branches:
       - main
-#jobs
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1 checkout do codigo
-      - name: checkout code
+      # 1. Checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      # 2 configurar node
-      - name: setup node.js
+      # 2. Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '20'
 
-      # 3 instalar dependencias
-      - name: install dependencies
+      # 3. Install dependencies
+      - name: Install dependencies
         run: npm install
 
-      # 4 testes
-      - name: run tests
+      # 4. Run tests
+      - name: Run tests
         run: npm test
 
-      # 5 buildar
-      - name: build
+      # 5. Build app
+      - name: Build
         run: npm run build
         env:
-          # ignorar avisos
           CI: false
 
-      # 6 configuração do AWS CLI
+      # 6. Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # 7. Terraform init
+      - name: Terraform Init
+        run: terraform -chdir=infra init
+
+      # 8. Terraform plan
+      - name: Terraform Plan
+        run: terraform -chdir=infra plan -out=tfplan
+
+      # 9. Terraform apply
+      - name: Terraform Apply
+        run: terraform -chdir=infra apply -auto-approve tfplan
+
+      # 10. Setup AWS CLI
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-        
-      # 7 enviar os arquivos para o S3
+
+      # 11. Deploy build to S3
       - name: Deploy to S3
         run: |
-          aws s3 sync build/ s3://sandbox-devops-cbkremer/ --exclude ".git/*" --delete --exact-timestamps
-
-
-
-
-
-
-        
-      
+          BUCKET_NAME=$(terraform -chdir=infra output -raw bucket_name)
+          echo "Deploying to bucket: $BUCKET_NAME"
+          aws s3 sync build/ s3://$BUCKET_NAME/ --exclude ".git/*" --delete --exact-timestamps
