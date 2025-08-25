@@ -61,5 +61,5 @@ jobs:
       # 11. Deploy build to S3
       - name: Deploy React to S3
         run: |
-          #BUCKET_NAME=$(terraform -chdir=infra output -raw bucket_name)
-          #aws s3 sync build/ s3://$BUCKET_NAME/ --delete --exact-timestamps
+          BUCKET_NAME=$(terraform -chdir=infra output -raw bucket_name)
+          aws s3 sync build/ s3://$BUCKET_NAME/ --delete --exact-timestamps
