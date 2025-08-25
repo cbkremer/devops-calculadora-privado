@@ -14,14 +14,15 @@ resource "aws_s3_bucket" "app_bucket" {
     index_document = "index.html"
     error_document = "index.html"
   }
+}
 
-  # Disable block public access for this bucket
-  public_access_block {
-    block_public_acls       = false
-    block_public_policy     = false
-    ignore_public_acls      = false
-    restrict_public_buckets = false
-  }
+resource "aws_s3_bucket_public_access_block" "app_bucket_block" {
+  bucket = aws_s3_bucket.app_bucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
 
 output "bucket_name" {
