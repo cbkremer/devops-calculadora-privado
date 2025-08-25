@@ -34,29 +34,29 @@ jobs:
         env:
           CI: false
 
-      # 6. Setup Terraform
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      # 7. Terraform init
-      - name: Terraform Init
-        run: terraform -chdir=infra init
-
-      # 8. Terraform plan
-      - name: Terraform Plan
-        run: terraform -chdir=infra plan -out=tfplan
-
-      # 9. Terraform apply
-      - name: Terraform Apply
-        run: terraform -chdir=infra apply -auto-approve tfplan
-
-      # 10. Setup AWS CLI
+      # 6. Setup AWS CLI
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+
+      # 7. Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # 8. Terraform init
+      - name: Terraform Init
+        run: terraform -chdir=infra init
+
+      # 9. Terraform plan
+      - name: Terraform Plan
+        run: terraform -chdir=infra plan -out=tfplan
+
+      # 10. Terraform apply
+      - name: Terraform Apply
+        run: terraform -chdir=infra apply -auto-approve tfplan
 
       # 11. Deploy build to S3
       - name: Deploy to S3
