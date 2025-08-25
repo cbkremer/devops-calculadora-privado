@@ -33,7 +33,6 @@ resource "aws_s3_bucket_website_configuration" "app_website" {
   }
 }
 
-# Bucket policy
 resource "aws_s3_bucket_policy" "app_bucket_policy" {
   bucket = aws_s3_bucket.app_bucket.id
 
@@ -48,6 +47,10 @@ resource "aws_s3_bucket_policy" "app_bucket_policy" {
       }
     ]
   })
+
+  depends_on = [
+    aws_s3_bucket_public_access_block.app_bucket
+  ]
 }
 
 output "bucket_name" {
