@@ -35,11 +35,8 @@ jobs:
         env:
           # ignorar avisos
           CI: false
-  deploy:
-    runs-on: ubuntu-latest
 
-    steps:
-      # 1 configuração do AWS CLI
+      # 6 configuração do AWS CLI
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -47,10 +44,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
         
-      # 2 enviar os arquivos para o S3
+      # 7 enviar os arquivos para o S3
       - name: Deploy to S3
         run: |
-          aws s3 sync . s3://sandbox-devops-cbkremer/ --exclude ".git/*" --delete --exact-timestamps
+          aws s3 sync build/ s3://sandbox-devops-cbkremer/ --exclude ".git/*" --delete --exact-timestamps
 
 
 
