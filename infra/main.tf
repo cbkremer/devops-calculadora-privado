@@ -8,7 +8,6 @@ resource "random_id" "suffix" {
 
 resource "aws_s3_bucket" "app_bucket" {
   bucket = "sandbox-devops-cbkremer-${random_id.suffix.hex}"
-  acl    = "public-read"
 
   website {
     index_document = "index.html"
