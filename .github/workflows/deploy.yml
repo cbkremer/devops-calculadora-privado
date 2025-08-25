@@ -48,7 +48,7 @@ jobs:
 
       # 8. Terraform init
       - name: Terraform Init
-        run: terraform -chdir=infra initz
+        run: terraform -chdir=infra init
 
       # 9. Terraform plan
       - name: Terraform Plan
