@@ -50,7 +50,7 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=infra init
 
-      # 9. Terraform plan
+      # 9. Terraform plan, test after changing IAM config
       - name: Terraform Plan
         run: terraform -chdir=infra plan -out=tfplan
 
