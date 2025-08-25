@@ -50,7 +50,7 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=infra init
 
-      # 9. Terraform plan, test after changing IAM config
+      # 9. Terraform plan
       - name: Terraform Plan
         run: terraform -chdir=infra plan -out=tfplan
 
@@ -59,8 +59,7 @@ jobs:
         run: terraform -chdir=infra apply -auto-approve tfplan
 
       # 11. Deploy build to S3
-      - name: Deploy to S3
+      - name: Deploy React to S3
         run: |
-          BUCKET_NAME=$(terraform -chdir=infra output -raw bucket_name)
-          echo "Deploying to bucket: $BUCKET_NAME"
-          aws s3 sync build/ s3://$BUCKET_NAME/ --exclude ".git/*" --delete --exact-timestamps
+          #BUCKET_NAME=$(terraform -chdir=infra output -raw bucket_name)
+          #aws s3 sync build/ s3://$BUCKET_NAME/ --delete --exact-timestamps
